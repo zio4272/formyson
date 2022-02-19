@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'authentication',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
@@ -89,6 +90,10 @@ DATABASES = {
 
 REST_FRAMEWORK = {
     'NON_FIELD_ERRORS_KEY': 'error',
+}
+
+SWAGGER_SETTINGS = {
+    'USE_SESSION_AUTH': False, # drf_yasg swagger django login deactive
 }
 
 # Password validation
