@@ -91,10 +91,20 @@ DATABASES = {
 
 REST_FRAMEWORK = {
     'NON_FIELD_ERRORS_KEY': 'error',
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
 }
 
 SWAGGER_SETTINGS = {
-    'USE_SESSION_AUTH': False, # drf_yasg swagger django login deactive
+    'USE_SESSION_AUTH': False, # drf_yasg swagger django login deactive,
+    'SECURITY_DEFINITIONS': {
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+        }
+    }
 }
 
 # Password validation
