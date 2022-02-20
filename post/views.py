@@ -22,7 +22,7 @@ class PostDetail(RetrieveUpdateDestroyAPIView):
     serializer_class = PostListSerializer
     queryset = Post.objects.all()
     permission_classes = (permissions.IsAuthenticated, IsUser,)
-    lookup_fields = "id"
+    lookup_field = "id"
 
     def perform_create(self, serializer):
 
