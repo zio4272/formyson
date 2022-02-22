@@ -54,3 +54,8 @@ class LoginSerializer(serializers.ModelSerializer):
             'refresh_token': user.tokens()['refresh'],
             'access_token': user.tokens()['access']
         }
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        exclude = ('password',)
