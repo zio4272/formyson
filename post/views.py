@@ -38,7 +38,6 @@ class PostDetailAPIView(RetrieveUpdateDestroyAPIView):
 
     def get_permissions(self):
         method = self.request.method
-        print(method)
         if method == 'GET':
             self.permission_classes = [permissions.IsAuthenticatedOrReadOnly, ]
         else:
