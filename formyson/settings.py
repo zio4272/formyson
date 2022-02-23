@@ -99,13 +99,14 @@ REST_FRAMEWORK = {
 
 SWAGGER_SETTINGS = {
     'USE_SESSION_AUTH': False, # drf_yasg swagger django login deactive,
+    'DEFAULT_AUTO_SCHEMA_CLASS': 'drf_yasg_examples.SwaggerAutoSchema',
     'SECURITY_DEFINITIONS': {
         'Bearer': {
             'type': 'apiKey',
             'name': 'Authorization',
             'in': 'header'
         }
-    }
+    },
 }
 
 # Password validation
