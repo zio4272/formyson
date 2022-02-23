@@ -1,12 +1,12 @@
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from .models import Post
-from .serializers import PostBodySerializer, PostListSerializer
+from .serializers import PostBodySerializer, PostSerializer
 from rest_framework import permissions
 from .permissions import IsUser, IsAdminUser
 
 class PostListCreateAPIView(ListCreateAPIView):
 
-    serializer_class = PostListSerializer
+    serializer_class = PostSerializer
     queryset = Post.objects.all()
 
     # 메소드별 permission
@@ -22,7 +22,7 @@ class PostListCreateAPIView(ListCreateAPIView):
     def get_serializer_class(self):
         if self.request.method == 'POST':
             return PostBodySerializer
-        return PostListSerializer
+        return PostSerializer
 
     def perform_create(self, serializer):
         return serializer.save(user=self.request.user)
@@ -32,7 +32,7 @@ class PostListCreateAPIView(ListCreateAPIView):
 
 class PostDetailAPIView(RetrieveUpdateDestroyAPIView):
     
-    serializer_class = PostListSerializer
+    serializer_class = PostSerializer
     queryset = Post.objects.all()
     lookup_field = "id"
 
@@ -48,7 +48,7 @@ class PostDetailAPIView(RetrieveUpdateDestroyAPIView):
     # 메소드별 serializer
     def get_serializer_class(self):
         if self.request.method == 'GET':
-            return PostListSerializer
+            return PostSerializer
         return PostBodySerializer
 
     def get_queryset(self):
