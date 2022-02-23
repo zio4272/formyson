@@ -15,3 +15,7 @@ class PostBodySerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = ['id', 'title', 'content', 'created_at', 'updated_at']
+        examples = {
+            'title': '제목',
+            'content': '내용'
+        }

@@ -16,6 +16,9 @@ class CommentBodySerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = ['id','comment', 'created_at']
+        examples = {
+            'comment': '내용',
+        }
 
 class CommentCreateSerializer(serializers.ModelSerializer):
     post_id = serializers.IntegerField(write_only=True)
@@ -23,5 +26,6 @@ class CommentCreateSerializer(serializers.ModelSerializer):
         model = Comment
         fields = ['id','post_id', 'comment', 'created_at']
         examples = {
+            'post_id': 1,
             'comment': '내용',
         }
