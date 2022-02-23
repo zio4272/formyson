@@ -55,7 +55,9 @@ class LoginSerializer(serializers.ModelSerializer):
             'access_token': user.tokens()['access']
         }
 
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        exclude = ('password',)
+
+class UserSerializer(serializers.ModelSerializer):    
+    class Meta:        
+        model = User       
+        extra_kwargs = {'password': {'write_only': True}}
+        fields = ['username', 'email', 'is_superuser','is_verified', 'is_active', 'is_staff', 'is_father']
