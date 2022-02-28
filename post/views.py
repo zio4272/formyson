@@ -1,8 +1,12 @@
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+
+from comment.models import Comment
 from .models import Post
 from .serializers import PostBodySerializer, PostSerializer
 from rest_framework import permissions
 from .permissions import IsUser, IsAdminUser
+from rest_framework.response import Response
+from django.db.models import Prefetch
 
 class PostListCreateAPIView(ListCreateAPIView):
 
@@ -51,4 +55,8 @@ class PostDetailAPIView(RetrieveUpdateDestroyAPIView):
         return PostBodySerializer
 
     def get_queryset(self):
-        return self.queryset
+        id = self.kwargs['id']
+        post = Post.objects.filter(id=id)
+        comments = post.comment_post.all()
+
+        return self.queryset.filter(id=id)
