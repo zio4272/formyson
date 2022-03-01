@@ -4,7 +4,14 @@ from authentication.serializers import UserSerializer
 
 
 class CommentSerializer(serializers.ModelSerializer):
-    user = UserSerializer(read_only=True)
+    user = serializers.SerializerMethodField()
+
+    def get_user(self, obj):
+        return {
+                'id': obj.user.id,
+                'username': obj.user.username,
+                'email': obj.user.email,
+            }
 
     class Meta:
         model = Comment
@@ -21,7 +28,15 @@ class CommentBodySerializer(serializers.ModelSerializer):
         }
 
 class PostSerializer(serializers.ModelSerializer):
-    user = UserSerializer(read_only=True)
+    user = serializers.SerializerMethodField()
+
+    def get_user(self, obj):
+        return {
+                'id': obj.user.id,
+                'username': obj.user.username,
+                'email': obj.user.email,
+            }
+            
     comments = CommentSerializer(read_only=True, many=True)
     comment_count = serializers.IntegerField(source='comments.count', read_only=True)
     
