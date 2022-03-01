@@ -64,6 +64,7 @@ class CommentDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = CommentSerializer
     queryset = Comment.objects.all()
     lookup_field = "id"
+    http_method_names = ['post', 'put', 'patch', 'delete']
 
     def get_permissions(self):
         method = self.request.method
@@ -72,11 +73,6 @@ class CommentDetailView(generics.RetrieveUpdateDestroyAPIView):
         else:
             self.permission_classes = [permissions.IsAuthenticated, permissions.IsAdminUser, ]
         return super(CommentDetailView, self).get_permissions()
-
-    def get_serializer_class(self):
-        if self.request.method == 'GET':
-            return CommentSerializer
-        return CommentBodySerializer
 
     def get_queryset(self):
         return self.queryset
