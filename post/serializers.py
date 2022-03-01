@@ -23,10 +23,11 @@ class CommentBodySerializer(serializers.ModelSerializer):
 class PostSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
     comments = CommentSerializer(read_only=True, many=True)
+    comment_count = serializers.IntegerField(source='comments.count', read_only=True)
     
     class Meta:
         model = Post
-        fields = ['id', 'title', 'content', 'user', 'comments']
+        fields = ['id', 'title', 'content', 'user', 'comments', 'comment_count']
 
 class PostBodySerializer(serializers.ModelSerializer):
     
