@@ -1,18 +1,35 @@
 from rest_framework import serializers
-from .models import Post
+from .models import Post, Comment
 from authentication.serializers import UserSerializer
-from comment.serializers import CommentSerializer
 
 
-class PostSerializer(serializers.ModelSerializer):
+class CommentSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
 
     class Meta:
-        model = Post
-        fields = ['id', 'title', 'content', 'created_at', 'updated_at', 'user']
+        model = Comment
+        fields = ['id', 'comment', 'created_at', 'updated_at', 'user']
 
-# 작성,수정시에는 body에 user 정보 필요없어서 만든 serializer
+class CommentBodySerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Comment
+        fields = ['post_id', 'comment']
+        examples = {
+            'post_id': 1,
+            'comment': '댓글입니다' 
+        }
+
+class PostSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+    comments = CommentSerializer(read_only=True, many=True)
+    
+    class Meta:
+        model = Post
+        fields = ['id', 'title', 'content', 'user', 'comments']
+
 class PostBodySerializer(serializers.ModelSerializer):
+    
     class Meta:
         model = Post
         fields = ['id', 'title', 'content', 'created_at', 'updated_at']

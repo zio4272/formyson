@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'authentication',
     'drf_yasg',
     'post',
-    'comment',
 ]
 
 MIDDLEWARE = [

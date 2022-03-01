@@ -1,28 +1,23 @@
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from django import views
 
-from comment.models import Comment
-from .models import Post
-from .serializers import PostBodySerializer, PostSerializer
-from rest_framework import permissions
+from .models import Post, Comment
+from .serializers import PostBodySerializer, PostSerializer, CommentSerializer, CommentBodySerializer
+from rest_framework import permissions, generics
 from .permissions import IsUser, IsAdminUser
-from rest_framework.response import Response
-from django.db.models import Prefetch
 
-class PostListCreateAPIView(ListCreateAPIView):
+class PostListCreateAPIView(generics.ListCreateAPIView):
 
     serializer_class = PostSerializer
     queryset = Post.objects.all()
 
-    # 메소드별 permission
     def get_permissions(self):
         method = self.request.method
         if method == 'GET':
             self.permission_classes = [permissions.IsAuthenticatedOrReadOnly, ]
         else:
-            self.permission_classes = [IsAdminUser, ] # 커스텀 사용
+            self.permission_classes = [permissions.IsAdminUser, ]
         return super(PostListCreateAPIView, self).get_permissions()
 
-    # 메소드별 serializer
     def get_serializer_class(self):
         if self.request.method == 'POST':
             return PostBodySerializer
@@ -34,7 +29,7 @@ class PostListCreateAPIView(ListCreateAPIView):
     def get_queryset(self):
         return Post.objects.all()
 
-class PostDetailAPIView(RetrieveUpdateDestroyAPIView):
+class PostDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     
     serializer_class = PostSerializer
     queryset = Post.objects.all()
@@ -48,15 +43,40 @@ class PostDetailAPIView(RetrieveUpdateDestroyAPIView):
             self.permission_classes = [IsAdminUser, ]
         return super(PostDetailAPIView, self).get_permissions()
 
-    # 메소드별 serializer
     def get_serializer_class(self):
         if self.request.method == 'GET':
             return PostSerializer
         return PostBodySerializer
 
-    def get_queryset(self):
-        id = self.kwargs['id']
-        post = Post.objects.filter(id=id)
-        comments = post.comment_post.all()
+    def get_queryset(self):        
+        return self.queryset
 
-        return self.queryset.filter(id=id)
+class CommentCreateAPIView(generics.CreateAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentBodySerializer
+    permission_classes = [IsUser, ]
+    lookup_field = "id"
+
+    def perform_create(self, serializer):
+        return serializer.save(user=self.request.user)
+
+class CommentDetailView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = CommentSerializer
+    queryset = Comment.objects.all()
+    lookup_field = "id"
+
+    def get_permissions(self):
+        method = self.request.method
+        if method == 'GET':
+            self.permission_classes = [permissions.IsAuthenticatedOrReadOnly, ]
+        else:
+            self.permission_classes = [permissions.IsAuthenticated, permissions.IsAdminUser, ]
+        return super(CommentDetailView, self).get_permissions()
+
+    def get_serializer_class(self):
+        if self.request.method == 'GET':
+            return CommentSerializer
+        return CommentBodySerializer
+
+    def get_queryset(self):
+        return self.queryset
