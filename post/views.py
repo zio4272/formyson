@@ -1,12 +1,14 @@
-from django import views
-
-from .models import Post, Comment
-from .serializers import PostBodySerializer, PostSerializer, CommentSerializer, CommentBodySerializer
+from .models import Post, Comment, PostImages
+from .serializers import PostBodySerializer, PostImagesSerializer, PostSerializer, CommentSerializer, CommentBodySerializer
 from rest_framework import permissions, generics
 from .permissions import IsUser, IsAdminUser
+from rest_framework.parsers import MultiPartParser
+from rest_framework.response import Response
+from .utils import post_image_s3_upload
+
 
 class PostListCreateAPIView(generics.ListCreateAPIView):
-
+    
     serializer_class = PostSerializer
     queryset = Post.objects.all()
 
@@ -76,3 +78,17 @@ class CommentDetailView(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return self.queryset
+
+class PostImageUploadAPIView(generics.CreateAPIView):
+    
+    serializer_class = PostImagesSerializer
+    parser_classes = [MultiPartParser, ]
+    permission_classes = [permissions.IsAdminUser, ]
+
+    def post(self, request, *args, **kwargs):
+
+        image = request.FILES['image']
+
+        upload = post_image_s3_upload(image)
+        
+        return Response({'img_url': upload.data})

@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'authentication',
     'drf_yasg',
     'post',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -150,3 +151,14 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# s3
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+AWS_S3_SECURE_URLS = False
+AWS_QUERYSTRING_AUTH = False
+AWS_REGION  = 'ap-northeast-2'
+
+AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
+AWS_BUCKET_NAME = os.environ.get('AWS_BUCKET_NAME')
+AWS_DOMAIN = 'https://s3.ap-northeast-2.amazonaws.com/{}'.format(AWS_BUCKET_NAME)

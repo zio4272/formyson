@@ -1,5 +1,7 @@
+from distutils.command.upload import upload
 from django.db import models
 from authentication.models import User
+from .utils import post_image_s3_upload
 
 class Post(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.CASCADE, null=False, related_name='post_user')
@@ -20,3 +22,10 @@ class Comment(models.Model):
 
     class Meta:
         db_table = 'comment'
+
+class PostImages(models.Model):
+    post_id = models.ForeignKey(Post, on_delete=models.CASCADE, null=False, related_name='images', db_column='post_id')
+    image = models.ImageField(upload_to=post_image_s3_upload, editable=True, null=True)
+
+    class Meta:
+        db_table = 'post_images'

@@ -1,6 +1,11 @@
 from rest_framework import serializers
-from .models import Post, Comment
-from authentication.serializers import UserSerializer
+from .models import Post, Comment, PostImages
+
+class PostImagesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PostImages
+        fields = ['image']
+
 
 
 class CommentSerializer(serializers.ModelSerializer):
@@ -29,7 +34,6 @@ class CommentBodySerializer(serializers.ModelSerializer):
 
 class PostSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
-
     def get_user(self, obj):
         return {
                 'id': obj.user.id,
@@ -39,16 +43,17 @@ class PostSerializer(serializers.ModelSerializer):
             
     comments = CommentSerializer(read_only=True, many=True)
     comment_count = serializers.IntegerField(source='comments.count', read_only=True)
+    images = PostImagesSerializer(read_only=True, many=True)
     
     class Meta:
         model = Post
-        fields = ['id', 'title', 'content', 'user', 'comments', 'comment_count']
+        fields = ['id', 'title', 'content', 'user', 'comments', 'comment_count', 'images']
 
 class PostBodySerializer(serializers.ModelSerializer):
-    
+    images = serializers.ImageField()
     class Meta:
         model = Post
-        fields = ['id', 'title', 'content', 'created_at', 'updated_at']
+        fields = ['id', 'title', 'content', 'created_at', 'updated_at', 'images']
         examples = {
             'title': '제목',
             'content': '내용'
