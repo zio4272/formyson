@@ -4,9 +4,7 @@ from .models import Post, Comment, PostImages
 class PostImagesSerializer(serializers.ModelSerializer):
     class Meta:
         model = PostImages
-        fields = ['image']
-
-
+        fields = ['id', 'image']
 
 class CommentSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
