@@ -4,7 +4,6 @@ import hashlib
 import time
 
 from rest_framework.response import Response
-from formyson import settings
 
 def post_image_s3_upload(image):
 
@@ -29,4 +28,4 @@ def post_image_s3_upload(image):
         .ObjectAcl(os.environ.get('AWS_BUCKET_NAME'), file_name)\
         .put(ACL='public-read')
 
-    return Response('{}/{}'.format(settings.AWS_DOMAIN, file_name))
+    return Response('{}'.format(file_name))
