@@ -25,7 +25,7 @@ class Comment(models.Model):
 
 class PostImages(models.Model):
     post_id = models.ForeignKey(Post, on_delete=models.CASCADE, null=False, related_name='images', db_column='post_id')
-    image = models.ImageField(upload_to=post_image_s3_upload, editable=True, null=True)
+    image = models.ImageField(upload_to=post_image_s3_upload, editable=True, null=True, max_length=255)
 
     class Meta:
         db_table = 'post_images'
